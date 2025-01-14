@@ -1,7 +1,11 @@
+import Home from "./Components/Home"
+import Navbar from "./Components/Navbar"
+
 function App() {
   return (
-    <div className="text-red-500">
-      Hello World
+    <div className="box-border">
+      <Navbar />
+      <Home />
     </div>
   )
 }
