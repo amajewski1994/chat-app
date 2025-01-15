@@ -1,11 +1,11 @@
 import Friends from "./Friends"
-import Messages from "./Messages"
+import Conversation from "./Conversation"
 
 const Home = () => {
     return (
         <div className=" m-4 border rounded bg-slate-200/25 flex justify-between p-2">
             <Friends />
-            <Messages />
+            <Conversation />
         </div>
     )
 }
