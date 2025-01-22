@@ -1,6 +1,6 @@
 import Friends from "./Friends"
 import Conversation from "./Conversation"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 const DUMMY_LIST = [
     {
@@ -147,11 +147,20 @@ const Home = () => {
     const [messageInputValue, setMessageInputValue] = useState('')
     const [searchInputValue, setSearchInputValue] = useState('')
 
+    const chatRef = useRef(null);
+
     const chengeActiveFriend = (id) => {
         setActiveID(id - 1)
     }
 
-    const sendButtonHandler = () => {
+    const scrollChat = () => {
+        chatRef.current.scrollTop = chatRef.current.scrollHeight
+    }
+    useEffect(() => {
+        scrollChat()
+    }, [friendList])
+
+    const sendButtonHandler = (chatRef) => {
         const message = messageInputValue ? messageInputValue : 'thumb-up'
         const newMessage = {
             id: friendList[activeID].messages.length,
@@ -171,6 +180,8 @@ const Home = () => {
         }))
 
         setMessageInputValue('')
+        scrollChat(chatRef)
+
     }
 
     const filterFriendList = (value) => {
@@ -191,9 +202,9 @@ const Home = () => {
 
 
     return (
-        <div className=" m-4 border rounded bg-slate-200/25 flex justify-between p-2">
+        <div className=" m-8 border rounded bg-slate-200/25 flex justify-between p-2">
             <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} />
-            <Conversation friend={friendList[activeID]} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} />
+            <Conversation friend={friendList[activeID]} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} />
         </div>
     )
 }
