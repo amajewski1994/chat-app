@@ -2,37 +2,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import FriendRow from './FriendRow'
 
-const DUMMY_LIST = [
-    {
-        id: 0,
-        firstName: 'John',
-        lastName: 'Doe',
-        image: 'image',
-        online: true
-    }, {
-        id: 1,
-        firstName: 'Jane',
-        lastName: 'Doe',
-        image: 'image',
-        online: false
-    }, {
-        id: 2,
-        firstName: 'Robert',
-        lastName: 'Doe',
-        image: 'image',
-        online: true
-    }, {
-        id: 3,
-        firstName: 'Will',
-        lastName: 'Doe',
-        image: 'image',
-        online: true
-    },
-]
 
-const Friends = () => {
 
-    const list = DUMMY_LIST.map(element => <FriendRow key={element.id} {...element} />)
+const Friends = ({ friends, chengeActiveFriend }) => {
+
+    const list = friends.map(element => <FriendRow key={element.id} {...element} chengeActiveFriend={chengeActiveFriend} />)
 
     return (
         <div className="p-2 w-1/4 text-center">
