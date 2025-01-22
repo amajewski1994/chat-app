@@ -21,7 +21,7 @@ const Conversation = ({ friend, inputValue, inputHandler, sendButtonHandler }) =
                 {messagesList}
             </div>
             <div className="flex items-center">
-                <input className="rounded flex-1 px-2 py-1 focus-within:outline-none" value={inputValue} onChange={inputHandler} />
+                <input id='message' className="rounded flex-1 px-2 py-1 focus-within:outline-none" value={inputValue} onChange={inputHandler} />
                 <FontAwesomeIcon icon={inputValue ? faPaperPlane : faThumbsUp} className='px-2 mx-2 text-2xl cursor-pointer text-sky-200' onClick={sendButtonHandler} />
             </div>
         </div>

@@ -143,14 +143,16 @@ const DUMMY_LIST = [
 const Home = () => {
     const [activeID, setActiveID] = useState(0)
     const [friendList, setFriendList] = useState(DUMMY_LIST)
-    const [inputValue, setInputValue] = useState('')
+    const [filteredFriendList, setFilteredFriendList] = useState(DUMMY_LIST)
+    const [messageInputValue, setMessageInputValue] = useState('')
+    const [searchInputValue, setSearchInputValue] = useState('')
 
     const chengeActiveFriend = (id) => {
         setActiveID(id - 1)
     }
 
     const sendButtonHandler = () => {
-        const message = inputValue ? inputValue : 'thumb-up'
+        const message = messageInputValue ? messageInputValue : 'thumb-up'
         const newMessage = {
             id: friendList[activeID].messages.length,
             userID: 0,
@@ -167,17 +169,31 @@ const Home = () => {
                 return element
             }
         }))
-        setInputValue('')
+
+        setMessageInputValue('')
+    }
+
+    const filterFriendList = (value) => {
+        const newDUMMYLIST = [...friendList]
+        const filteredNewDummyList = newDUMMYLIST.filter(element => element.firstName.toLowerCase().includes(value) || element.lastName.toLowerCase().includes(value))
+        setFilteredFriendList(filteredNewDummyList)
     }
 
     const inputHandler = (e) => {
-        setInputValue(e.target.value)
+        if (e.target.id === 'message') {
+            setMessageInputValue(e.target.value)
+        } else {
+            setSearchInputValue(e.target.value)
+            filterFriendList(e.target.value)
+        }
     }
+
+
 
     return (
         <div className=" m-4 border rounded bg-slate-200/25 flex justify-between p-2">
-            <Friends friends={friendList} chengeActiveFriend={chengeActiveFriend} />
-            <Conversation friend={friendList[activeID]} inputValue={inputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} />
+            <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} />
+            <Conversation friend={friendList[activeID]} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} />
         </div>
     )
 }

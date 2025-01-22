@@ -4,7 +4,7 @@ import FriendRow from './FriendRow'
 
 
 
-const Friends = ({ friends, chengeActiveFriend }) => {
+const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler }) => {
 
     const list = friends.map(element => <FriendRow key={element.id} {...element} chengeActiveFriend={chengeActiveFriend} />)
 
@@ -13,7 +13,7 @@ const Friends = ({ friends, chengeActiveFriend }) => {
             <h2 className="text-2xl font-bold flex-1 text-center text-white [text-shadow:_1px_1px_0_rgb(0_0_0_/_40%)]">Friends</h2>
             <div className="flex justify-center items-center py-2">
                 <div className="flex-1 px-1">
-                    <input type="text" placeholder="Search" className="rounded w-full px-2 py-1 focus-within:outline-none" />
+                    <input id='search' type="text" placeholder="Search" className="rounded w-full px-2 py-1 focus-within:outline-none" value={inputValue} onChange={inputHandler} />
                 </div>
                 <div className="mx-4 text-xl cursor-pointer"><FontAwesomeIcon icon={faUserPlus} /></div>
             </div>
