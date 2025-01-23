@@ -140,7 +140,7 @@ const DUMMY_LIST = [
     },
 ]
 
-const Home = () => {
+const Home = ({openModal}) => {
     const [activeID, setActiveID] = useState(0)
     const [friendList, setFriendList] = useState(DUMMY_LIST)
     const [filteredFriendList, setFilteredFriendList] = useState(DUMMY_LIST)
@@ -203,7 +203,7 @@ const Home = () => {
 
     return (
         <div className=" m-8 border rounded bg-slate-200/25 flex justify-between p-2">
-            <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} />
+            <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} openModal={openModal} />
             <Conversation friend={friendList[activeID]} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} />
         </div>
     )

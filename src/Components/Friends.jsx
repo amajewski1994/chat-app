@@ -2,9 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import FriendRow from './FriendRow'
 
-
-
-const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler }) => {
+const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler, openModal }) => {
 
     const list = friends.map(element => <FriendRow key={element.id} {...element} chengeActiveFriend={chengeActiveFriend} />)
 
@@ -15,7 +13,7 @@ const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler }) => {
                 <div className="flex-1 px-1">
                     <input id='search' type="text" placeholder="Search" className="rounded w-full px-2 py-1 focus-within:outline-none" value={inputValue} onChange={inputHandler} />
                 </div>
-                <div className="mx-4 text-xl cursor-pointer"><FontAwesomeIcon icon={faUserPlus} /></div>
+                <div id='newFriendButton' onClick={openModal} className="mx-4 text-xl cursor-pointer"><FontAwesomeIcon className='pointer-events-none' icon={faUserPlus} /></div>
             </div>
             <div>
                 <ul>
