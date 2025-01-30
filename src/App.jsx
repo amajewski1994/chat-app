@@ -1,14 +1,20 @@
+import { useState } from "react"
+
 import Home from "./Components/Home"
 import Layout from "./Components/Layout"
 import Navbar from "./Components/Navbar"
 import Modal from "./Components/Modal"
-import { useState } from "react"
+
+import { AuthContext } from './context/auth-context';
+import { useAuth } from './hooks/auth-hook';
 
 function App() {
 
   const [modalIn, setModalIn] = useState(false)
   const [modalForm, setModalForm] = useState(false)
   const [searchFriendModal, setSearchFriendModal] = useState(false)
+
+  const { token, login, logout, userId, role, avatar } = useAuth();
 
   const openModal = (e) => {
     if (e.target.id === 'newFriendButton') {
@@ -30,12 +36,24 @@ function App() {
 
   return (
     <>
-      <Layout />
-      <div className=" absolute top-0 left-0 box-border h-dvh w-dvw">
-        <Navbar openModal={openModal} />
-        <Home openModal={openModal} />
-        <Modal searchFriendModal={searchFriendModal} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
-      </div>
+      <AuthContext.Provider
+        value={{
+          isLoggedIn: !!token,
+          token: token,
+          userId: userId,
+          role: role,
+          avatar: avatar,
+          login: login,
+          logout: logout
+        }}
+      >
+        <Layout />
+        <div className=" absolute top-0 left-0 box-border h-dvh w-dvw">
+          <Navbar openModal={openModal} />
+          <Home openModal={openModal} />
+          <Modal searchFriendModal={searchFriendModal} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
+        </div>
+      </AuthContext.Provider>
     </>
   )
 }
