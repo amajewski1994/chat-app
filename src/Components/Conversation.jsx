@@ -2,21 +2,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import Message from './Message'
 
-const Conversation = ({ friend, inputValue, inputHandler, sendButtonHandler, chatRef }) => {
+const Conversation = ({ messages, friend, inputValue, inputHandler, sendButtonHandler, chatRef, userId }) => {
 
-    const messagesList = friend.messages.map(message => <Message key={message.id} {...message} user={message.userID === 0 ? true : false} />)
-
+    const messagesList = messages.length > 0 && messages.map((message, index) => <Message key={index} {...message} user={message.author === userId ? true : false} />)
     return (
         <div className="flex flex-col justify-center flex-1 p-4 rounded shadow-xl">
-            <div className="py-4">
-                <h2 className="text-xl font-bold text-white [text-shadow:_1px_1px_0_rgb(0_0_0_/_40%)]">
-                    {friend.firstName} {friend.lastName}
+            <div className="py-2">
+                <h2 className="text-xl font-bold text-white [text-shadow:_1px_1px_0_rgb(0_0_0_/_40%)] min-h-7">
+                    {friend && `${friend.firstName} ${friend.lastName}`}
                 </h2>
-                <span className={`${friend.online ? 'text-green-500' : 'text-gray-800'}`}>{friend.online ? 'online' : 'offline'}</span>
+                <span className={`block min-h-6 ${friend && friend.online ? 'text-green-500' : 'text-gray-800'}`}>{friend && (friend.online ? 'online' : 'offline')}</span>
             </div>
             <div className="my-2 py-2 rounded bg-white/75 h-[65vh] overflow-hidden">
                 <div ref={chatRef} className={`px-[8px] overflow-y-scroll w-full h-full box-content`}>
-                    {messagesList}
+                    {friend && messagesList}
                 </div>
             </div>
             <div className="flex items-center">

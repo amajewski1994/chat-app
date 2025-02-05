@@ -47,7 +47,7 @@ const DUMMY_LIST = [
     },
 ]
 
-const Modal = ({ searchFriendModal, isRegisterForm, modalIn, closeModal, switchModal }) => {
+const Modal = ({ users, user, searchFriendModal, isRegisterForm, modalIn, closeModal, switchModal }) => {
 
     const [searchFriendList, setSearchFriendList] = useState(false)
 
@@ -64,9 +64,9 @@ const Modal = ({ searchFriendModal, isRegisterForm, modalIn, closeModal, switchM
                         <h2 className='text-2xl font-bold flex-1 text-center text-amber-100 [text-shadow:_2px_2px_0_rgb(0_0_0_/_40%)]'>{searchFriendModal ? 'ADD FRIEND' : isRegisterForm ? 'REGISTER' : 'LOGIN'}</h2>
                     </div>
                     <div className='my-4'>
-                        {searchFriendModal ? <SearchForm DUMMY_LIST={DUMMY_LIST} searchFriendList={searchFriendList} setSearchFriendList={setSearchFriendList} />
+                        {searchFriendModal ? <SearchForm users={users} user={user} searchFriendList={searchFriendList} setSearchFriendList={setSearchFriendList} closeModal={closeModal} />
                             :
-                            <Auth isRegisterForm={isRegisterForm} switchModal={switchModal} />
+                            <Auth isRegisterForm={isRegisterForm} switchModal={switchModal} closeModal={closeModal} />
                         }
                     </div>
                 </div>

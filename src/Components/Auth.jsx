@@ -1,18 +1,25 @@
 /* eslint-disable react/prop-types */
-import { useRef, useState } from 'react'
+import { useRef, useState, useContext } from 'react'
+import { useHttpClient } from '../hooks/http-hook';
+import { AuthContext } from '../context/auth-context';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
-const Auth = ({ isRegisterForm, switchModal }) => {
+const Auth = ({ isRegisterForm, switchModal, closeModal }) => {
 
     const [formValidity, setFormValidity] = useState(true)
     const [imageSrc, setImageSrc] = useState(false)
     const form = useRef(null)
+
+    const auth = useContext(AuthContext);
+
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
     const imageHandler = (e) => {
         if (!e.target.files || !e.target.files[0]) return setImageSrc(false)
         setImageSrc(URL.createObjectURL(e.target.files[0]))
     }
 
-    const submitForm = (e) => {
+    const submitForm = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget)
         const payload = Object.fromEntries(formData)
@@ -26,10 +33,39 @@ const Auth = ({ isRegisterForm, switchModal }) => {
                 return;
             }
         }
-        e.currentTarget.reset()
-        setImageSrc(false)
 
-        console.log(payload)
+        try {
+
+            let obj = {
+                email: payload.email,
+                password: payload.password,
+            }
+
+            if (isRegisterForm) {
+                obj = {
+                    firstName: payload.firstName,
+                    lastName: payload.lastName,
+                    email: payload.email,
+                    password: payload.password,
+                }
+            }
+
+            let request = `http://localhost:5000/api/users/${isRegisterForm ? 'signup' : 'login'}`;
+            // let request = `${process.env.REACT_APP_BACKEND_URL}/${props.request}`;
+            await sendRequest(request, 'POST',
+                formData,
+                JSON.stringify(obj),
+                {
+                    'Content-Type': 'application/json',
+                    // Authorization: 'Bearer ' + auth.token
+                }
+            );
+            await e.currentTarget.reset()
+            await closeModal()
+            await setImageSrc(false)
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return (

@@ -1,6 +1,7 @@
 import Friends from "./Friends"
 import Conversation from "./Conversation"
 import { useEffect, useRef, useState } from "react"
+import { useHttpClient } from '../hooks/http-hook';
 
 const DUMMY_LIST = [
     {
@@ -140,54 +141,80 @@ const DUMMY_LIST = [
     },
 ]
 
-const Home = ({openModal}) => {
-    const [activeID, setActiveID] = useState(0)
-    const [friendList, setFriendList] = useState(DUMMY_LIST)
-    const [filteredFriendList, setFilteredFriendList] = useState(DUMMY_LIST)
+const Home = ({ user, openModal, DUMMY_USER_ID }) => {
+    const [activeFriend, setActiveFriend] = useState(null)
+
+    const [friendList, setFriendList] = useState([])
+    const [filteredFriendList, setFilteredFriendList] = useState([])
+
     const [messageInputValue, setMessageInputValue] = useState('')
     const [searchInputValue, setSearchInputValue] = useState('')
 
+    const [messages, setMessages] = useState([])
+
     const chatRef = useRef(null);
 
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
     const chengeActiveFriend = (id) => {
-        setActiveID(id - 1)
+        const newActiveFriend = friendList.find(friend => friend._id === id)
+        setActiveFriend(newActiveFriend)
+        const userMessages = [...user.messages]
+        const filteredMessages = userMessages.filter(message => message.recipient === id || message.author === id)
+        setMessages(filteredMessages)
     }
 
     const scrollChat = () => {
         chatRef.current.scrollTop = chatRef.current.scrollHeight
     }
+
+    useEffect(() => {
+        if (!user) return
+        setFriendList(user.friends)
+        setFilteredFriendList(user.friends)
+    }, [user])
+
     useEffect(() => {
         scrollChat()
     }, [friendList])
 
-    const sendButtonHandler = (chatRef) => {
+    const sendButtonHandler = async (chatRef) => {
         const message = messageInputValue ? messageInputValue : 'thumb-up'
         const newMessage = {
-            id: friendList[activeID].messages.length,
-            userID: 0,
-            image: 'image',
-            date: '15/01/2024',
-            time: '14:00',
-            message
+            recipient: activeFriend._id,
+            value: message
+        }
+        const request = `http://localhost:5000/api/messages/`;
+        try {
+            const responseData = await sendRequest(request, 'POST',
+                JSON.stringify(newMessage),
+                {
+                    'Content-Type': 'application/json',
+                }
+            );
+            setMessageInputValue('')
+            // const newUser = { ...user }
+            // newUser.messages.push(responseData.createdMessage)
+            // await setUser(newUser)
+            setMessages([...messages, responseData.createdMessage])
+            scrollChat(chatRef)
+        } catch (err) {
+            console.log(err)
         }
 
-        setFriendList(friendList.map(element => {
-            if (element.id - 1 === activeID) {
-                return { ...element, messages: [...element.messages, newMessage] }
-            } else {
-                return element
-            }
-        }))
-
-        setMessageInputValue('')
-        scrollChat(chatRef)
-
+        // setFriendList(friendList.map(element => {
+        //     if (element.id - 1 === activeID) {
+        //         return { ...element, messages: [...element.messages, newMessage] }
+        //     } else {
+        //         return element
+        //     }
+        // }))
     }
 
     const filterFriendList = (value) => {
-        const newDUMMYLIST = [...friendList]
-        const filteredNewDummyList = newDUMMYLIST.filter(element => element.firstName.toLowerCase().includes(value) || element.lastName.toLowerCase().includes(value))
-        setFilteredFriendList(filteredNewDummyList)
+        const newList = [...friendList]
+        const filteredNewList = newList.filter(element => element.firstName.toLowerCase().includes(value) || element.lastName.toLowerCase().includes(value))
+        setFilteredFriendList(filteredNewList)
     }
 
     const inputHandler = (e) => {
@@ -204,7 +231,7 @@ const Home = ({openModal}) => {
     return (
         <div className=" m-8 border rounded bg-slate-200/25 flex justify-between p-2">
             <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} openModal={openModal} />
-            <Conversation friend={friendList[activeID]} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} />
+            <Conversation messages={messages} friend={activeFriend} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} userId={DUMMY_USER_ID} />
         </div>
     )
 }

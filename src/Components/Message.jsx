@@ -2,7 +2,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 // eslint-disable-next-line react/prop-types
-const Message = ({ image, message, time, user }) => {
+const Message = ({ image, value, createdAt, user }) => {
+
+    const date = new Date(createdAt)
+    const hours = date.getHours()
+    const minutes = date.getMinutes()
+    // const seconds = date.getSeconds()
+    const time = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`
+
     return (
         <div className={`chat ${user ? 'chat-end' : 'chat-start'}`}>
             <div className="chat-header my-1">
@@ -14,7 +21,7 @@ const Message = ({ image, message, time, user }) => {
                 </div>
             </div>
             <div className={`chat-bubble ${user && 'chat-bubble-primary'}`}>
-                {message === 'thumb-up' ? <FontAwesomeIcon icon={faThumbsUp} className='text-2xl text-sky-200' /> : message}
+                {value === 'thumb-up' ? <FontAwesomeIcon icon={faThumbsUp} className='text-2xl text-sky-200' /> : value}
             </div>
         </div>
     )

@@ -1,8 +1,8 @@
 // eslint-disable-next-line react/prop-types
-const FriendRow = ({ id, image, firstName, lastName, online, chengeActiveFriend }) => {
+const FriendRow = ({ _id, image, firstName, lastName, online, chengeActiveFriend }) => {
 
     const clickHandler = () => {
-        chengeActiveFriend(id)
+        chengeActiveFriend(_id)
     }
 
     return (

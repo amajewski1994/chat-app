@@ -1,11 +1,14 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { useHttpClient } from '../hooks/http-hook';
 
-const SearchForm = ({ DUMMY_LIST, setSearchFriendList, searchFriendList }) => {
+const SearchForm = ({ users, user, setSearchFriendList, searchFriendList, closeModal }) => {
+
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
     const filterList = (value) => {
-        const newList = [...DUMMY_LIST]
+        const newList = [...users]
         if (!value) return setSearchFriendList([])
         const filteredList = newList.filter(element => element.firstName.toLowerCase().includes(value.toLowerCase()) || element.lastName.toLowerCase().includes(value.toLowerCase()))
         setSearchFriendList(filteredList)
@@ -20,10 +23,40 @@ const SearchForm = ({ DUMMY_LIST, setSearchFriendList, searchFriendList }) => {
         filterList(payload.search)
     }
 
+    const checkIfCanAddFriend = (id) => {
+        for (const friend of user.friends) {
+            if (friend._id === id) {
+                return false;
+            }
+        }
+        return true
+    }
+
+    const addFriendHandler = async (friendID) => {
+        const obj = {
+            friendID
+        }
+        try {
+            let request = `http://localhost:5000/api/users/${user._id}`;
+            // let request = `${process.env.REACT_APP_BACKEND_URL}/${props.request}`;
+            await sendRequest(request, 'PATCH',
+                JSON.stringify(obj),
+                {
+                    'Content-Type': 'application/json',
+                    // Authorization: 'Bearer ' + auth.token
+                }
+            );
+
+            await closeModal()
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     const searchFriends = searchFriendList && searchFriendList.map((element, index) => {
         return <li className='flex justify-between my-2' key={index}>
             <span>{element.firstName} {element.lastName}</span>
-            <FontAwesomeIcon className='cursor-pointer text-blue-600' icon={faUserPlus} />
+            <FontAwesomeIcon onClick={() => addFriendHandler(element._id)} className={`cursor-pointer text-blue-600 ${checkIfCanAddFriend(element._id) ? 'block' : 'hidden'}`} icon={faUserPlus} />
         </li>
     })
 
