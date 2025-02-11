@@ -25,19 +25,6 @@ function App() {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const responseData = await sendRequest(
-          `http://localhost:5000/api/users/${DUMMY_USER_ID}`
-          // `${process.env.REACT_APP_BACKEND_URL}/items/${params.iid}`
-        );
-        setUser(responseData.user)
-
-      } catch (err) {
-        console.log(err)
-      }
-    };
-
     const getUsers = async () => {
       try {
         const responseData = await sendRequest(
@@ -50,9 +37,27 @@ function App() {
       }
     };
 
-    getUser();
     getUsers();
   }, [])
+
+  useEffect(() => {
+    const getUser = async () => {
+      if (!userId) return setUser(null)
+      console.log('testtt')
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/users/${DUMMY_USER_ID}`
+          // `${process.env.REACT_APP_BACKEND_URL}/items/${params.iid}`
+        );
+        setUser(responseData.user)
+
+      } catch (err) {
+        console.log(err)
+      }
+    };
+
+    getUser();
+  }, [userId])
 
   const openModal = (e) => {
     if (e.target.id === 'newFriendButton') {

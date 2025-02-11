@@ -16,6 +16,7 @@ const SearchForm = ({ users, user, setSearchFriendList, searchFriendList, closeM
 
     const searchNewFriendHandler = (e) => {
         e.preventDefault();
+        if (!user) return
         const formData = new FormData(e.currentTarget)
         const payload = Object.fromEntries(formData)
         if (!payload.search) return setSearchFriendList([])
@@ -33,6 +34,7 @@ const SearchForm = ({ users, user, setSearchFriendList, searchFriendList, closeM
     }
 
     const addFriendHandler = async (friendID) => {
+        if (!user) return
         const obj = {
             friendID
         }

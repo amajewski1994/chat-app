@@ -169,9 +169,14 @@ const Home = ({ user, openModal, DUMMY_USER_ID }) => {
     }
 
     useEffect(() => {
-        if (!user) return
-        setFriendList(user.friends)
-        setFilteredFriendList(user.friends)
+        if (user) {
+            setFriendList(user.friends)
+            setFilteredFriendList(user.friends)
+        } else {
+            setFriendList([])
+            setFilteredFriendList([])
+            setMessages([])
+        }
     }, [user])
 
     useEffect(() => {
@@ -179,6 +184,7 @@ const Home = ({ user, openModal, DUMMY_USER_ID }) => {
     }, [friendList])
 
     const sendButtonHandler = async (chatRef) => {
+        if (!user) return
         const message = messageInputValue ? messageInputValue : 'thumb-up'
         const newMessage = {
             recipient: activeFriend._id,
