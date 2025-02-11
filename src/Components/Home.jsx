@@ -3,7 +3,7 @@ import Conversation from "./Conversation"
 import { useEffect, useRef, useState } from "react"
 import { useHttpClient } from '../hooks/http-hook';
 
-const Home = ({ user, openModal, DUMMY_USER_ID }) => {
+const Home = ({ user, openModal, userId }) => {
     const [activeFriend, setActiveFriend] = useState(null)
 
     const [friendList, setFriendList] = useState([])
@@ -86,7 +86,7 @@ const Home = ({ user, openModal, DUMMY_USER_ID }) => {
     return (
         <div className=" m-8 border rounded bg-slate-200/25 flex justify-between p-2">
             <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} openModal={openModal} />
-            <Conversation messages={messages} friend={activeFriend} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} userId={DUMMY_USER_ID} />
+            <Conversation messages={messages} friend={activeFriend} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} userId={userId} />
         </div>
     )
 }

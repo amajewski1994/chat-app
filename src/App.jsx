@@ -10,8 +10,6 @@ import { useAuth } from './hooks/auth-hook';
 
 import { useHttpClient } from './hooks/http-hook';
 
-const DUMMY_USER_ID = '67a21729c5636ab3fa072744'
-
 function App() {
 
   const [modalIn, setModalIn] = useState(false)
@@ -45,7 +43,7 @@ function App() {
       if (!userId) return setUser(null)
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/users/${DUMMY_USER_ID}`
+          `http://localhost:5000/api/users/${userId}`
           // `${process.env.REACT_APP_BACKEND_URL}/items/${params.iid}`
         );
         setUser(responseData.user)
@@ -91,7 +89,7 @@ function App() {
         <Layout />
         <div className=" absolute top-0 left-0 box-border h-dvh w-dvw">
           <Navbar openModal={openModal} />
-          <Home user={user} openModal={openModal} DUMMY_USER_ID={DUMMY_USER_ID} />
+          <Home user={user} openModal={openModal} userId={userId} />
           <Modal users={users} user={user} searchFriendModal={searchFriendModal} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
         </div>
       </AuthContext.Provider>
