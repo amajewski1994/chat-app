@@ -43,7 +43,6 @@ function App() {
   useEffect(() => {
     const getUser = async () => {
       if (!userId) return setUser(null)
-      console.log('testtt')
       try {
         const responseData = await sendRequest(
           `http://localhost:5000/api/users/${DUMMY_USER_ID}`

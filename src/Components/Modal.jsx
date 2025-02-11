@@ -5,48 +5,6 @@ import { faX } from '@fortawesome/free-solid-svg-icons'
 import SearchForm from './SearchForm'
 import Auth from './Auth'
 
-const DUMMY_LIST = [
-    {
-        id: 1,
-        firstName: 'John',
-        lastName: 'Doe',
-        image: 'image',
-    }, {
-        id: 2,
-        firstName: 'Jane',
-        lastName: 'Doe',
-        image: 'image',
-    }, {
-        id: 3,
-        firstName: 'Robert',
-        lastName: 'Doe',
-        image: 'image',
-    }, {
-        id: 4,
-        firstName: 'Will',
-        lastName: 'Doe',
-        image: 'image',
-    },
-    {
-        id: 5,
-        firstName: 'Stephen',
-        lastName: 'Wright',
-        image: 'image',
-    },
-    {
-        id: 6,
-        firstName: 'John',
-        lastName: 'Wright',
-        image: 'image',
-    },
-    {
-        id: 7,
-        firstName: 'Will',
-        lastName: 'Wright',
-        image: 'image',
-    },
-]
-
 const Modal = ({ users, user, searchFriendModal, isRegisterForm, modalIn, closeModal, switchModal }) => {
 
     const [searchFriendList, setSearchFriendList] = useState(false)

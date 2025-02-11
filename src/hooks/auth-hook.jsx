@@ -43,7 +43,6 @@ export const useAuth = () => {
         if (!socket.data || !socket.data.connected) return
         socket.data.disconnect()
         socket.data = null
-        // window.location.reload()
     }, []);
 
     useEffect(() => {

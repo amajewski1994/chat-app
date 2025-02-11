@@ -1,21 +1,7 @@
 import { useContext } from "react"
 import { AuthContext } from '../context/auth-context';
 
-// const BASE_URL = "http://localhost:5000"
-// const socket = io(BASE_URL)
-
 const Navbar = ({ openModal }) => {
-
-    // const [isLogged, setIsLogged] = useState(false)
-
-    // const socketFunction = () => {
-    //     if (isLogged) {
-    //         socket.disconnect();
-    //     } else {
-    //         socket.connect();
-    //     }
-    //     setIsLogged(prevIsLogged => !prevIsLogged)
-    // }
 
     const auth = useContext(AuthContext);
 
@@ -34,7 +20,6 @@ const Navbar = ({ openModal }) => {
                 <div
                     className="cursor-pointer border-b-2 border-b-transparent rounded-sm transition-colors duration-500 [text-shadow:_1px_1px_0_rgb(0_0_0_/_40%)] hover:border-b-white"
                     onClick={auth.isLoggedIn ? logoutHandler : openModal}
-                // onClick={socketFunction}
                 >
                     {auth.isLoggedIn ? 'LOGOUT' : 'LOGIN'}
 

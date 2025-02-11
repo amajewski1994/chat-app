@@ -3,144 +3,6 @@ import Conversation from "./Conversation"
 import { useEffect, useRef, useState } from "react"
 import { useHttpClient } from '../hooks/http-hook';
 
-const DUMMY_LIST = [
-    {
-        id: 1,
-        firstName: 'John',
-        lastName: 'Doe',
-        image: 'image',
-        online: true,
-        messages: [
-            {
-                id: 0,
-                userID: 0,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:00',
-                message: 'test message0'
-            }, {
-                id: 1,
-                userID: 0,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:05',
-                message: 'test message1'
-            }, {
-                id: 2,
-                userID: 1,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:10',
-                message: 'test message2'
-            }, {
-                id: 3,
-                userID: 0,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:20',
-                message: 'test message3'
-            },
-        ]
-    }, {
-        id: 2,
-        firstName: 'Jane',
-        lastName: 'Doe',
-        image: 'image',
-        online: false,
-        messages: [
-            {
-                id: 0,
-                userID: 2,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:00',
-                message: 'test message15'
-            }, {
-                id: 1,
-                userID: 0,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:05',
-                message: 'test message1'
-            }, {
-                id: 2,
-                userID: 2,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:10',
-                message: 'test message2'
-            }, {
-                id: 3,
-                userID: 0,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:20',
-                message: 'test message3'
-            },
-        ]
-    }, {
-        id: 3,
-        firstName: 'Robert',
-        lastName: 'Doe',
-        image: 'image',
-        online: true,
-        messages: [
-            {
-                id: 0,
-                userID: 3,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:00',
-                message: 'test message0'
-            }, {
-                id: 1,
-                userID: 3,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:05',
-                message: 'test message1'
-            }, {
-                id: 2,
-                userID: 3,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:10',
-                message: 'test message2'
-            }, {
-                id: 3,
-                userID: 0,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:20',
-                message: 'test message3'
-            },
-        ]
-    }, {
-        id: 4,
-        firstName: 'Will',
-        lastName: 'Doe',
-        image: 'image',
-        online: true,
-        messages: [
-            {
-                id: 0,
-                userID: 0,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:00',
-                message: 'test message0'
-            }, {
-                id: 1,
-                userID: 4,
-                image: 'image',
-                date: '15/01/2024',
-                time: '14:05',
-                message: 'test message1'
-            }
-        ]
-    },
-]
-
 const Home = ({ user, openModal, DUMMY_USER_ID }) => {
     const [activeFriend, setActiveFriend] = useState(null)
 
@@ -199,22 +61,11 @@ const Home = ({ user, openModal, DUMMY_USER_ID }) => {
                 }
             );
             setMessageInputValue('')
-            // const newUser = { ...user }
-            // newUser.messages.push(responseData.createdMessage)
-            // await setUser(newUser)
             setMessages([...messages, responseData.createdMessage])
             scrollChat(chatRef)
         } catch (err) {
             console.log(err)
         }
-
-        // setFriendList(friendList.map(element => {
-        //     if (element.id - 1 === activeID) {
-        //         return { ...element, messages: [...element.messages, newMessage] }
-        //     } else {
-        //         return element
-        //     }
-        // }))
     }
 
     const filterFriendList = (value) => {
@@ -231,8 +82,6 @@ const Home = ({ user, openModal, DUMMY_USER_ID }) => {
             filterFriendList(e.target.value)
         }
     }
-
-
 
     return (
         <div className=" m-8 border rounded bg-slate-200/25 flex justify-between p-2">
