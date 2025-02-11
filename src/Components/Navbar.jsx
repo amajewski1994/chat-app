@@ -30,14 +30,20 @@ const Navbar = ({ openModal }) => {
                     CHAT APP
                 </h2>
             </div>
-            <div className="mx-10 text-xl text-white">
+            <div className="mx-10 text-xl text-white flex items-center">
                 <div
                     className="cursor-pointer border-b-2 border-b-transparent rounded-sm transition-colors duration-500 [text-shadow:_1px_1px_0_rgb(0_0_0_/_40%)] hover:border-b-white"
                     onClick={auth.isLoggedIn ? logoutHandler : openModal}
                 // onClick={socketFunction}
                 >
                     {auth.isLoggedIn ? 'LOGOUT' : 'LOGIN'}
+
                 </div>
+                {auth.isLoggedIn && <div className="ml-5">
+                    <img src={'../../public/bg-image.jpg'} alt="avatar" className="w-10 h-10 rounded-full" />
+                    {/* <img src={auth.avatar} alt="avatar" /> */}
+                </div>
+                }
             </div>
         </div>
     )
