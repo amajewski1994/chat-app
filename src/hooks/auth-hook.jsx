@@ -1,18 +1,20 @@
 import { useState, useCallback, useEffect } from 'react';
+import { io } from "socket.io-client"
+import { socket } from '../shared/socket'
 
 let logoutTimer;
+
+const BASE_URL = "http://localhost:5000"
 
 export const useAuth = () => {
     const [token, setToken] = useState(false);
     const [tokenExpirationDate, setTokenExpirationDate] = useState();
     const [userId, setUserId] = useState(false);
-    const [role, setRole] = useState(false);
     const [avatar, setAvatar] = useState(false);
 
-    const login = useCallback((uid, token, role, avatar, expirationDate) => {
+    const login = useCallback((uid, token, avatar, expirationDate) => {
         setToken(token);
         setUserId(uid);
-        setRole(role);
         setAvatar(avatar)
         const tokenExpirationDate =
             expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
@@ -22,20 +24,25 @@ export const useAuth = () => {
             JSON.stringify({
                 userId: uid,
                 token: token,
-                role: role,
                 avatar: avatar,
                 expiration: tokenExpirationDate.toISOString()
             })
         );
+        const createdSocket = io(BASE_URL)
+        if (socket.data && socket.data.connected) return
+        createdSocket.connect()
+        socket.data = createdSocket
     }, []);
 
     const logout = useCallback(() => {
         setToken(null);
         setTokenExpirationDate(null);
         setUserId(null);
-        setRole(null);
         setAvatar(null);
         localStorage.removeItem('userData');
+        if (!socket.data || !socket.data.connected) return
+        socket.data.disconnect()
+        socket.data = null
         // window.location.reload()
     }, []);
 
@@ -55,9 +62,9 @@ export const useAuth = () => {
             storedData.token &&
             new Date(storedData.expiration) > new Date()
         ) {
-            login(storedData.userId, storedData.token, storedData.role, storedData.avatar, storedData.nickname, new Date(storedData.expiration));
+            login(storedData.userId, storedData.token, storedData.avatar, new Date(storedData.expiration));
         }
     }, [login]);
 
-    return { token, login, logout, userId, role, avatar };
+    return { token, login, logout, userId, avatar };
 };

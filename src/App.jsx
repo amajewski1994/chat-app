@@ -20,7 +20,7 @@ function App() {
   const [users, setUsers] = useState([])
   const [user, setUser] = useState(false)
 
-  const { token, login, logout, userId, role, avatar } = useAuth();
+  const { token, login, logout, userId, avatar } = useAuth();
 
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -79,7 +79,6 @@ function App() {
           isLoggedIn: !!token,
           token: token,
           userId: userId,
-          role: role,
           avatar: avatar,
           login: login,
           logout: logout
