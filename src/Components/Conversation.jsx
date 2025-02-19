@@ -4,7 +4,7 @@ import Message from './Message'
 
 const Conversation = ({ messages, friend, inputValue, inputHandler, sendButtonHandler, chatRef, userId }) => {
 
-    const messagesList = messages.length > 0 && messages.map((message, index) => <Message key={index} {...message} user={message.author === userId ? true : false} />)
+    const messagesList = messages.length > 0 && messages.map((message, index) => <Message key={index} {...message} friend={friend} user={message.author === userId ? true : false} />)
     return (
         <div className="flex flex-col justify-center flex-1 p-4 rounded shadow-xl">
             <div className="py-2">
