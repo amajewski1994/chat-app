@@ -1,5 +1,7 @@
+import { useContext } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { AuthContext } from '../context/auth-context';
 
 // eslint-disable-next-line react/prop-types
 const Message = ({ image, value, createdAt, user }) => {
@@ -7,6 +9,7 @@ const Message = ({ image, value, createdAt, user }) => {
     const date = new Date(createdAt)
     const hours = date.getHours()
     const minutes = date.getMinutes()
+    const auth = useContext(AuthContext);
     // const seconds = date.getSeconds()
     const time = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`
 
@@ -17,7 +20,7 @@ const Message = ({ image, value, createdAt, user }) => {
             </div>
             <div className="chat-image avatar">
                 <div className="w-10 rounded-full">
-                    <img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                    <img alt="Tailwind CSS chat bubble component" src={`https://chat-app-andrev.s3.eu-central-1.amazonaws.com/${auth.avatar}`} />
                 </div>
             </div>
             <div className={`chat-bubble ${user && 'chat-bubble-primary'}`}>

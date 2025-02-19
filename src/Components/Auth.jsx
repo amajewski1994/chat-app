@@ -24,7 +24,6 @@ const Auth = ({ isRegisterForm, switchModal, closeModal }) => {
         const formData = new FormData(e.currentTarget)
         const payload = Object.fromEntries(formData)
 
-
         for (let [key, value] of formData.entries()) {
             if (!value || (key === 'image' && !value.type.includes('image'))) {
                 setFormValidity(false)
@@ -35,7 +34,6 @@ const Auth = ({ isRegisterForm, switchModal, closeModal }) => {
             }
         }
 
-
         try {
 
             let obj = {
@@ -43,26 +41,14 @@ const Auth = ({ isRegisterForm, switchModal, closeModal }) => {
                 password: payload.password,
             }
 
-            if (isRegisterForm) {
-                obj = {
-                    firstName: payload.firstName,
-                    lastName: payload.lastName,
-                    email: payload.email,
-                    password: payload.password,
-                }
-            }
             await e.currentTarget.reset()
             await setImageSrc(false)
 
             let request = `http://localhost:5000/api/users/${isRegisterForm ? 'signup' : 'login'}`;
             // let request = `${process.env.REACT_APP_BACKEND_URL}/${props.request}`;
             const responseData = await sendRequest(request, 'POST',
-                // formData,
-                JSON.stringify(obj),
-                {
-                    'Content-Type': 'application/json',
-                    // Authorization: 'Bearer ' + auth.token
-                }
+                isRegisterForm ? formData : JSON.stringify(obj),
+                isRegisterForm ? {} : { 'Content-Type': 'application/json', }
             );
             auth.login(responseData.userId, responseData.token, responseData.image)
             await closeModal()

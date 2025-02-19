@@ -25,8 +25,8 @@ const Navbar = ({ openModal }) => {
 
                 </div>
                 {auth.isLoggedIn && <div className="ml-5">
-                    <img src={'../../public/bg-image.jpg'} alt="avatar" className="w-10 h-10 rounded-full" />
-                    {/* <img src={auth.avatar} alt="avatar" /> */}
+                    {/* <img src={'../../public/bg-image.jpg'} alt="avatar" className="w-10 h-10 rounded-full" /> */}
+                    <img src={`https://chat-app-andrev.s3.eu-central-1.amazonaws.com/${auth.avatar}`} alt="avatar" className="w-10 h-10 rounded-full" />
                 </div>
                 }
             </div>
