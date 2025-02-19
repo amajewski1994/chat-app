@@ -38,6 +38,7 @@ const Home = ({ user, setUser, openModal, userId }) => {
             setFriendList([])
             setFilteredFriendList([])
             setMessages([])
+            setActiveFriend(null)
         }
     }, [user])
 
