@@ -3,7 +3,7 @@ import Conversation from "./Conversation"
 import { useEffect, useRef, useState } from "react"
 import { useHttpClient } from '../hooks/http-hook';
 
-const Home = ({ user, openModal, userId }) => {
+const Home = ({ user, setUser, openModal, userId }) => {
     const [activeFriend, setActiveFriend] = useState(null)
 
     const [friendList, setFriendList] = useState([])
@@ -49,8 +49,9 @@ const Home = ({ user, openModal, userId }) => {
         if (!user) return
         const message = messageInputValue ? messageInputValue : 'thumb-up'
         const newMessage = {
+            value: message,
+            userId,
             recipient: activeFriend._id,
-            value: message
         }
         const request = `http://localhost:5000/api/messages/`;
         try {
@@ -61,8 +62,11 @@ const Home = ({ user, openModal, userId }) => {
                 }
             );
             setMessageInputValue('')
-            setMessages([...messages, responseData.createdMessage])
-            scrollChat(chatRef)
+            const userClone = await { ...user }
+            await userClone.messages.push(responseData.createdMessage)
+            await setUser(userClone)
+            await setMessages([...messages, responseData.createdMessage])
+            await scrollChat(chatRef)
         } catch (err) {
             console.log(err)
         }

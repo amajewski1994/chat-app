@@ -113,7 +113,7 @@ function App() {
         <Layout />
         <div className=" absolute top-0 left-0 box-border h-dvh w-dvw">
           <Navbar openModal={openModal} />
-          <Home user={user} openModal={openModal} userId={userId} />
+          <Home user={user} setUser={setUser} openModal={openModal} userId={userId} />
           <Modal users={users} user={user} searchFriendModal={searchFriendModal} addFriendHandler={addFriendHandler} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
         </div>
       </AuthContext.Provider>
