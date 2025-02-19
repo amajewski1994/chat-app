@@ -43,6 +43,10 @@ export const useAuth = () => {
             console.log(userIds)
             setOnlineUsers(userIds)
         });
+
+        createdSocket.on("newMessage", (newMessage) => {
+            console.log(newMessage)
+        });
     }, []);
 
     const logout = useCallback(() => {
