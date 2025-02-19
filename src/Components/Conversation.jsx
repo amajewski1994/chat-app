@@ -8,7 +8,7 @@ const Conversation = ({ messages, friend, inputValue, inputHandler, sendButtonHa
 
     const auth = useContext(AuthContext);
 
-    const messagesList = messages.length > 0 && messages.map((message, index) => <Message key={index} {...message} friend={friend} user={message.author === userId ? true : false} />)
+    const messagesList = messages.length > 0 && messages.map((message, index) => <Message key={index} {...message} prevMessage={messages[index - 1] } friend={friend} user={message.author === userId ? true : false} />)
 
     return (
         <div className="flex flex-col justify-center flex-1 p-4 rounded shadow-xl">
