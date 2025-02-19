@@ -1,16 +1,15 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import { useHttpClient } from '../hooks/http-hook';
 
-const SearchForm = ({ users, user, setSearchFriendList, searchFriendList, closeModal }) => {
-
-    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+const SearchForm = ({ users, user, setSearchFriendList, searchFriendList, addFriendHandler }) => {
 
     const filterList = (value) => {
         const newList = [...users]
         if (!value) return setSearchFriendList([])
-        const filteredList = newList.filter(element => element.firstName.toLowerCase().includes(value.toLowerCase()) || element.lastName.toLowerCase().includes(value.toLowerCase()))
+        const filteredList = newList.filter(element => (element.firstName.toLowerCase().includes(value.toLowerCase()) ||
+            element.lastName.toLowerCase().includes(value.toLowerCase())) &&
+            user._id !== element._id)
         setSearchFriendList(filteredList)
     }
 
@@ -33,32 +32,15 @@ const SearchForm = ({ users, user, setSearchFriendList, searchFriendList, closeM
         return true
     }
 
-    const addFriendHandler = async (friendID) => {
-        if (!user) return
-        const obj = {
-            friendID
-        }
-        try {
-            let request = `http://localhost:5000/api/users/${user._id}`;
-            // let request = `${process.env.REACT_APP_BACKEND_URL}/${props.request}`;
-            await sendRequest(request, 'PATCH',
-                JSON.stringify(obj),
-                {
-                    'Content-Type': 'application/json',
-                    // Authorization: 'Bearer ' + auth.token
-                }
-            );
-
-            await closeModal()
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
     const searchFriends = searchFriendList && searchFriendList.map((element, index) => {
         return <li className='flex justify-between my-2' key={index}>
             <span>{element.firstName} {element.lastName}</span>
-            <FontAwesomeIcon onClick={() => addFriendHandler(element._id)} className={`cursor-pointer text-blue-600 ${checkIfCanAddFriend(element._id) ? 'block' : 'hidden'}`} icon={faUserPlus} />
+            <FontAwesomeIcon onClick={() => {
+                addFriendHandler(element._id, setSearchFriendList)
+            }}
+                className={`cursor-pointer text-blue-600 ${checkIfCanAddFriend(element._id) ? 'block' : 'hidden'}`}
+                icon={faUserPlus}
+            />
         </li>
     })
 

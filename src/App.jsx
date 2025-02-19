@@ -47,7 +47,6 @@ function App() {
           // `${process.env.REACT_APP_BACKEND_URL}/items/${params.iid}`
         );
         setUser(responseData.user)
-
       } catch (err) {
         console.log(err)
       }
@@ -74,6 +73,31 @@ function App() {
     setModalForm(prevModalForm => !prevModalForm)
   }
 
+  const addFriendHandler = async (friendID, setSearchFriendList) => {
+    if (!user) return
+    const obj = {
+      friendID
+    }
+    try {
+      let request = `http://localhost:5000/api/users/${user._id}`;
+      // let request = `${process.env.REACT_APP_BACKEND_URL}/${props.request}`;
+      const responseData = await sendRequest(request, 'PATCH',
+        JSON.stringify(obj),
+        {
+          'Content-Type': 'application/json',
+          // Authorization: 'Bearer ' + auth.token
+        }
+      );
+      const userClone = await { ...user }
+      await userClone.friends.push(responseData.newFriend)
+      await setUser(userClone)
+      await closeModal()
+      await setSearchFriendList(false)
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <AuthContext.Provider
@@ -90,7 +114,7 @@ function App() {
         <div className=" absolute top-0 left-0 box-border h-dvh w-dvw">
           <Navbar openModal={openModal} />
           <Home user={user} openModal={openModal} userId={userId} />
-          <Modal users={users} user={user} searchFriendModal={searchFriendModal} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
+          <Modal users={users} user={user} searchFriendModal={searchFriendModal} addFriendHandler={addFriendHandler} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
         </div>
       </AuthContext.Provider>
     </>
