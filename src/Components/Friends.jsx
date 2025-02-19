@@ -1,9 +1,14 @@
+import { useContext } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { AuthContext } from '../context/auth-context';
 import FriendRow from './FriendRow'
 
 const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler, openModal }) => {
-    const list = friends.map((element, index) => <FriendRow key={index} {...element} chengeActiveFriend={chengeActiveFriend} />)
+
+    const auth = useContext(AuthContext);
+
+    const list = friends.map((element, index) => <FriendRow key={index} {...element} online={auth.onlineUsers.includes(element._id)} chengeActiveFriend={chengeActiveFriend} />)
 
     return (
         <div className="p-2 w-1/4 text-center">

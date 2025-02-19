@@ -11,14 +11,16 @@ export const useAuth = () => {
     const [tokenExpirationDate, setTokenExpirationDate] = useState();
     const [userId, setUserId] = useState(false);
     const [avatar, setAvatar] = useState(false);
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
     const login = useCallback((uid, token, avatar, expirationDate) => {
         setToken(token);
         setUserId(uid);
-        setAvatar(avatar)
+        setAvatar(avatar);
         const tokenExpirationDate =
             expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
         setTokenExpirationDate(tokenExpirationDate);
+
         localStorage.setItem(
             'userData',
             JSON.stringify({
@@ -28,10 +30,19 @@ export const useAuth = () => {
                 expiration: tokenExpirationDate.toISOString()
             })
         );
-        const createdSocket = io(BASE_URL)
+        const createdSocket = io(BASE_URL, {
+            query: {
+                userId: uid
+            },
+        })
         if (socket.data && socket.data.connected) return
         createdSocket.connect()
         socket.data = createdSocket
+
+        createdSocket.on("getOnlineUsers", (userIds) => {
+            console.log(userIds)
+            setOnlineUsers(userIds)
+        });
     }, []);
 
     const logout = useCallback(() => {
@@ -65,5 +76,5 @@ export const useAuth = () => {
         }
     }, [login]);
 
-    return { token, login, logout, userId, avatar };
+    return { token, login, logout, userId, avatar, onlineUsers };
 };
