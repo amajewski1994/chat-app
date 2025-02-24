@@ -4,7 +4,7 @@ import { socket } from '../shared/socket'
 
 let logoutTimer;
 
-const BASE_URL = "http://localhost:5000"
+const BASE_URL = import.meta.env.VITE_BACKEND_URL
 
 export const useAuth = () => {
     const [token, setToken] = useState(false);

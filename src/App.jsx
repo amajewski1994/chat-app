@@ -26,8 +26,7 @@ function App() {
     const getUsers = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/users/`
-          // `${process.env.REACT_APP_BACKEND_URL}/items/${params.iid}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/users/`
         );
         setUsers(responseData.users)
       } catch (err) {
@@ -43,8 +42,7 @@ function App() {
       if (!userId) return setUser(null)
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/users/${userId}`
-          // `${process.env.REACT_APP_BACKEND_URL}/items/${params.iid}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/users/${userId}`
         );
         setUser(responseData.user)
       } catch (err) {
@@ -79,8 +77,7 @@ function App() {
       friendID
     }
     try {
-      let request = `http://localhost:5000/api/users/${user._id}`;
-      // let request = `${process.env.REACT_APP_BACKEND_URL}/${props.request}`;
+      let request = `${import.meta.env.VITE_BACKEND_URL}/api/users/${user._id}`;
       const responseData = await sendRequest(request, 'PATCH',
         JSON.stringify(obj),
         {

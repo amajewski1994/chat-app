@@ -44,8 +44,7 @@ const Auth = ({ isRegisterForm, switchModal, closeModal }) => {
             await e.currentTarget.reset()
             await setImageSrc(false)
 
-            let request = `http://localhost:5000/api/users/${isRegisterForm ? 'signup' : 'login'}`;
-            // let request = `${process.env.REACT_APP_BACKEND_URL}/${props.request}`;
+            let request = `${import.meta.env.VITE_BACKEND_URL}/api/users/${isRegisterForm ? 'signup' : 'login'}`;
             const responseData = await sendRequest(request, 'POST',
                 isRegisterForm ? formData : JSON.stringify(obj),
                 isRegisterForm ? {} : { 'Content-Type': 'application/json', }

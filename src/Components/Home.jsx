@@ -54,7 +54,7 @@ const Home = ({ user, setUser, openModal, userId }) => {
             userId,
             recipient: activeFriend._id,
         }
-        const request = `http://localhost:5000/api/messages/`;
+        const request = `${import.meta.env.VITE_BACKEND_URL}/api/messages/`;
         try {
             const responseData = await sendRequest(request, 'POST',
                 JSON.stringify(newMessage),
