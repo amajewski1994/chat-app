@@ -3,9 +3,7 @@ import Conversation from "./Conversation"
 import { useEffect, useRef, useState } from "react"
 import { useHttpClient } from '../hooks/http-hook';
 
-const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, filteredMessages, filterMessages }) => {
-    const [activeFriend, setActiveFriend] = useState(null)
-
+const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, filteredMessages, filterMessages, activeFriend, setActiveFriend }) => {
     const [friendList, setFriendList] = useState([])
     const [filteredFriendList, setFilteredFriendList] = useState([])
 
