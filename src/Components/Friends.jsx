@@ -11,7 +11,7 @@ const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler, openMo
     const list = friends.map((element, index) => <FriendRow key={index} {...element} online={auth.onlineUsers.includes(element._id)} chengeActiveFriend={chengeActiveFriend} />)
 
     return (
-        <div className="p-2 w-1/4 text-center">
+        <div className="p-2 w-full text-center md:w-1/3 lg:w-1/4">
             <h2 className="text-2xl font-bold flex-1 text-center text-white [text-shadow:_1px_1px_0_rgb(0_0_0_/_40%)]">Friends</h2>
             <div className="flex justify-center items-center py-2">
                 <div className="flex-1 px-1">
@@ -22,7 +22,8 @@ const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler, openMo
                 </div>
             </div>
             <div>
-                <ul>
+                {/* TO DO SLIDER */}
+                <ul className="flex overflow-hidden md:block">
                     {list}
                 </ul>
             </div>

@@ -33,7 +33,7 @@ const SearchForm = ({ users, user, setSearchFriendList, searchFriendList, addFri
     }
 
     const searchFriends = searchFriendList && searchFriendList.map((element, index) => {
-        return <li className='flex justify-between my-2' key={index}>
+        return <li className='flex justify-between items-center my-2' key={index}>
             <span>{element.firstName} {element.lastName}</span>
             <FontAwesomeIcon onClick={() => {
                 addFriendHandler(element._id, setSearchFriendList)
@@ -46,11 +46,11 @@ const SearchForm = ({ users, user, setSearchFriendList, searchFriendList, addFri
 
     return (
         <div className='p-4'>
-            <form className='flex justify-between' onSubmit={searchNewFriendHandler}>
-                <input name='search' type='text' className='flex-1 mx-2 rounded w-full px-2 py-1 focus-within:outline-none' />
+            <form className='flex justify-between flex-col md:flex-row' onSubmit={searchNewFriendHandler}>
+                <input name='search' placeholder='Friend name' type='text' className='flex-1 rounded w-full px-2 py-1 focus-within:outline-none' />
                 <button
                     type='submit'
-                    className='mx-2 bg-blue-500 text-white p-2 font-semibold rounded w-1/3'
+                    className='mt-4 mx-0 bg-blue-500 text-white p-1 font-semibold rounded w-full md:w-1/3 md:mt-0 md:mx-2 md:p-2'
                 >SEARCH</button>
             </form>
             {searchFriendList && <ul className='p-2 mt-4 list-none'>

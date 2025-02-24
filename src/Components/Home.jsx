@@ -42,7 +42,7 @@ const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, fi
         scrollChat()
     }, [friendList])
 
-    const sendButtonHandler = async (chatRef) => {
+    const sendButtonHandler = async () => {
         if (!user || !activeFriend) return
         const message = messageInputValue ? messageInputValue : 'thumb-up'
         const newMessage = {
@@ -60,7 +60,7 @@ const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, fi
             );
             setMessageInputValue('')
             await setAllUserMessages([...allUserMessages, responseData.createdMessage])
-            await scrollChat(chatRef)
+            await scrollChat()
         } catch (err) {
             console.log(err)
         }
@@ -82,7 +82,7 @@ const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, fi
     }
 
     return (
-        <div className=" m-8 border rounded bg-slate-200/25 flex justify-between p-2">
+        <div className="m-8 border rounded bg-slate-200/25 flex justify-between p-2 flex-col md:flex-row">
             <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} openModal={openModal} />
             <Conversation messages={filteredMessages} friend={activeFriend} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} userId={userId} />
         </div>

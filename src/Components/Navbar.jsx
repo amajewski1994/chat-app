@@ -16,7 +16,7 @@ const Navbar = ({ openModal }) => {
                     CHAT APP
                 </h2>
             </div>
-            <div className="mx-10 text-xl text-white flex items-center">
+            <div className="mx-2 text-sm text-white flex items-center justify-center flex-col-reverse md:flex-row md:mx-10 md:text-xl">
                 <div
                     className="cursor-pointer border-b-2 border-b-transparent rounded-sm transition-colors duration-500 [text-shadow:_1px_1px_0_rgb(0_0_0_/_40%)] hover:border-b-white"
                     onClick={auth.isLoggedIn ? logoutHandler : openModal}
@@ -24,9 +24,8 @@ const Navbar = ({ openModal }) => {
                     {auth.isLoggedIn ? 'LOGOUT' : 'LOGIN'}
 
                 </div>
-                {auth.isLoggedIn && <div className="ml-5">
-                    {/* <img src={'../../public/bg-image.jpg'} alt="avatar" className="w-10 h-10 rounded-full" /> */}
-                    <img src={`https://chat-app-andrev.s3.eu-central-1.amazonaws.com/${auth.avatar}`} alt="avatar" className="w-10 h-10 rounded-full" />
+                {auth.isLoggedIn && <div className="mb-1 md:ml-5 md:mb-0">
+                    <img src={`https://chat-app-andrev.s3.eu-central-1.amazonaws.com/${auth.avatar}`} alt="avatar" className="w-[40px] h-[40px] max-w-none max-h-none rounded-full object-cover" />
                 </div>
                 }
             </div>
