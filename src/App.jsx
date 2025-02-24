@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 import Home from "./Components/Home"
 import Layout from "./Components/Layout"
@@ -20,6 +20,8 @@ function App() {
   const [allUserMessages, setAllUserMessages] = useState([])
   const [filteredMessages, setFilteredMessages] = useState([])
   const [activeFriend, setActiveFriend] = useState(null)
+
+  const chatRef = useRef(null);
 
   const { token, login, logout, userId, avatar, onlineUsers, newMessage } = useAuth();
 
@@ -76,10 +78,18 @@ function App() {
     setModalIn(true)
   }
 
-  const filterMessages = (id) => {
+  const filterMessages = async (id) => {
     const userMessages = [...allUserMessages]
     const newFilteredMessages = userMessages.filter(message => message.recipient === id || message.author === id)
     setFilteredMessages(newFilteredMessages)
+    setTimeout(() => {
+      scrollChat()
+    })
+  }
+
+  const scrollChat = () => {
+    chatRef.current.scrollTop = chatRef.current.scrollHeight
+    console.log('chat scroll')
   }
 
   const closeModal = () => {
@@ -131,7 +141,7 @@ function App() {
         <Layout />
         <div className=" absolute top-0 left-0 box-border h-dvh w-dvw">
           <Navbar openModal={openModal} />
-          <Home user={user} openModal={openModal} userId={userId} allUserMessages={allUserMessages} setAllUserMessages={setAllUserMessages} filteredMessages={filteredMessages} filterMessages={filterMessages} activeFriend={activeFriend} setActiveFriend={setActiveFriend} />
+          <Home user={user} openModal={openModal} userId={userId} allUserMessages={allUserMessages} setAllUserMessages={setAllUserMessages} filteredMessages={filteredMessages} filterMessages={filterMessages} activeFriend={activeFriend} setActiveFriend={setActiveFriend} chatRef={chatRef} scrollChat={scrollChat} />
           <Modal users={users} user={user} searchFriendModal={searchFriendModal} addFriendHandler={addFriendHandler} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
         </div>
       </AuthContext.Provider>

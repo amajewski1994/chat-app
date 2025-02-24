@@ -20,7 +20,7 @@ const Message = ({ value, createdAt, user, friend, prevMessage }) => {
     return (
         <>
             {fullDate && <div className="text-center text-xs opacity-50">{fullDate}</div>}
-            <div className={`chat ${user ? 'chat-end' : 'chat-start'}`}>
+            <div className={`chat ${user ? 'chat-end pr-4 md:pr-0' : 'chat-start'}`}>
                 <div className="chat-header my-1">
                     <time className="text-xs opacity-50 m-1">{time}</time>
                 </div>

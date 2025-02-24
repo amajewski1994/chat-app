@@ -3,25 +3,20 @@ import Conversation from "./Conversation"
 import { useEffect, useRef, useState } from "react"
 import { useHttpClient } from '../hooks/http-hook';
 
-const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, filteredMessages, filterMessages, activeFriend, setActiveFriend }) => {
+const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, filteredMessages, filterMessages, activeFriend, setActiveFriend, chatRef, scrollChat }) => {
     const [friendList, setFriendList] = useState([])
     const [filteredFriendList, setFilteredFriendList] = useState([])
 
     const [messageInputValue, setMessageInputValue] = useState('')
     const [searchInputValue, setSearchInputValue] = useState('')
 
-    const chatRef = useRef(null);
-
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
-    const chengeActiveFriend = (id) => {
+    const chengeActiveFriend = async (id) => {
         const newActiveFriend = friendList.find(friend => friend._id === id)
-        setActiveFriend(newActiveFriend)
-        filterMessages(id)
-    }
-
-    const scrollChat = () => {
-        chatRef.current.scrollTop = chatRef.current.scrollHeight
+        await setActiveFriend(newActiveFriend)
+        await filterMessages(id)
+        await scrollChat()
     }
 
     useEffect(() => {
@@ -58,7 +53,6 @@ const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, fi
             );
             setMessageInputValue('')
             await setAllUserMessages([...allUserMessages, responseData.createdMessage])
-            await scrollChat()
         } catch (err) {
             console.log(err)
         }
