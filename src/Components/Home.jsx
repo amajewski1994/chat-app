@@ -3,7 +3,7 @@ import Conversation from "./Conversation"
 import { useEffect, useRef, useState } from "react"
 import { useHttpClient } from '../hooks/http-hook';
 
-const Home = ({ user, setUser, openModal, userId }) => {
+const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, filteredMessages, filterMessages }) => {
     const [activeFriend, setActiveFriend] = useState(null)
 
     const [friendList, setFriendList] = useState([])
@@ -12,8 +12,6 @@ const Home = ({ user, setUser, openModal, userId }) => {
     const [messageInputValue, setMessageInputValue] = useState('')
     const [searchInputValue, setSearchInputValue] = useState('')
 
-    const [messages, setMessages] = useState([])
-
     const chatRef = useRef(null);
 
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -21,9 +19,7 @@ const Home = ({ user, setUser, openModal, userId }) => {
     const chengeActiveFriend = (id) => {
         const newActiveFriend = friendList.find(friend => friend._id === id)
         setActiveFriend(newActiveFriend)
-        const userMessages = [...user.messages]
-        const filteredMessages = userMessages.filter(message => message.recipient === id || message.author === id)
-        setMessages(filteredMessages)
+        filterMessages(id)
     }
 
     const scrollChat = () => {
@@ -37,7 +33,7 @@ const Home = ({ user, setUser, openModal, userId }) => {
         } else {
             setFriendList([])
             setFilteredFriendList([])
-            setMessages([])
+            setAllUserMessages([])
             setActiveFriend(null)
         }
     }, [user])
@@ -47,7 +43,7 @@ const Home = ({ user, setUser, openModal, userId }) => {
     }, [friendList])
 
     const sendButtonHandler = async (chatRef) => {
-        if (!user) return
+        if (!user || !activeFriend) return
         const message = messageInputValue ? messageInputValue : 'thumb-up'
         const newMessage = {
             value: message,
@@ -63,10 +59,7 @@ const Home = ({ user, setUser, openModal, userId }) => {
                 }
             );
             setMessageInputValue('')
-            const userClone = await { ...user }
-            await userClone.messages.push(responseData.createdMessage)
-            await setUser(userClone)
-            await setMessages([...messages, responseData.createdMessage])
+            await setAllUserMessages([...allUserMessages, responseData.createdMessage])
             await scrollChat(chatRef)
         } catch (err) {
             console.log(err)
@@ -91,7 +84,7 @@ const Home = ({ user, setUser, openModal, userId }) => {
     return (
         <div className=" m-8 border rounded bg-slate-200/25 flex justify-between p-2">
             <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} openModal={openModal} />
-            <Conversation messages={messages} friend={activeFriend} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} userId={userId} />
+            <Conversation messages={filteredMessages} friend={activeFriend} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} userId={userId} />
         </div>
     )
 }

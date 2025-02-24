@@ -12,6 +12,7 @@ export const useAuth = () => {
     const [userId, setUserId] = useState(false);
     const [avatar, setAvatar] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
+    const [newMessage, setNewMessage] = useState(false);
 
     const login = useCallback((uid, token, avatar, expirationDate) => {
         setToken(token);
@@ -46,6 +47,7 @@ export const useAuth = () => {
 
         createdSocket.on("newMessage", (newMessage) => {
             console.log(newMessage)
+            setNewMessage(newMessage)
         });
     }, []);
 
@@ -80,5 +82,5 @@ export const useAuth = () => {
         }
     }, [login]);
 
-    return { token, login, logout, userId, avatar, onlineUsers };
+    return { token, login, logout, userId, avatar, onlineUsers, newMessage };
 };

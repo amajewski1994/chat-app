@@ -17,8 +17,10 @@ function App() {
   const [searchFriendModal, setSearchFriendModal] = useState(false)
   const [users, setUsers] = useState([])
   const [user, setUser] = useState(false)
+  const [allUserMessages, setAllUserMessages] = useState([])
+  const [filteredMessages, setFilteredMessages] = useState([])
 
-  const { token, login, logout, userId, avatar, onlineUsers } = useAuth();
+  const { token, login, logout, userId, avatar, onlineUsers, newMessage } = useAuth();
 
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -45,6 +47,7 @@ function App() {
           `${import.meta.env.VITE_BACKEND_URL}/api/users/${userId}`
         );
         setUser(responseData.user)
+        setAllUserMessages(responseData.user.messages)
       } catch (err) {
         console.log(err)
       }
@@ -53,6 +56,15 @@ function App() {
     getUser();
   }, [userId])
 
+  useEffect(() => {
+    if (!newMessage) return
+    setAllUserMessages([...allUserMessages, newMessage])
+  }, [newMessage])
+
+  useEffect(() => {
+    filterMessages(userId)
+  }, [allUserMessages])
+
   const openModal = (e) => {
     if (e.target.id === 'newFriendButton') {
       setSearchFriendModal(true)
@@ -60,6 +72,12 @@ function App() {
       setSearchFriendModal(false)
     }
     setModalIn(true)
+  }
+
+  const filterMessages = (id) => {
+    const userMessages = [...allUserMessages]
+    const newFilteredMessages = userMessages.filter(message => message.recipient === id || message.author === id)
+    setFilteredMessages(newFilteredMessages)
   }
 
   const closeModal = () => {
@@ -111,7 +129,7 @@ function App() {
         <Layout />
         <div className=" absolute top-0 left-0 box-border h-dvh w-dvw">
           <Navbar openModal={openModal} />
-          <Home user={user} setUser={setUser} openModal={openModal} userId={userId} />
+          <Home user={user} openModal={openModal} userId={userId} allUserMessages={allUserMessages} setAllUserMessages={setAllUserMessages} filteredMessages={filteredMessages} filterMessages={filterMessages} />
           <Modal users={users} user={user} searchFriendModal={searchFriendModal} addFriendHandler={addFriendHandler} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
         </div>
       </AuthContext.Provider>
