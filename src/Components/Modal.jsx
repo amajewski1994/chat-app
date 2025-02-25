@@ -4,15 +4,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import SearchForm from './SearchForm'
 import Auth from './Auth'
+import { useHttpClient } from '../hooks/http-hook';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
 const Modal = ({ users, user, searchFriendModal, addFriendHandler, isRegisterForm, modalIn, closeModal, switchModal }) => {
 
     const [searchFriendList, setSearchFriendList] = useState(false)
 
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
     return (
         <>
             <div className={`w-full h-full absolute left-0 top-0 bg-black/60 transition-all ${modalIn ? 'opacity-100 block' : 'opacity-0 hidden'}`}></div>
-            <div className={`absolute left-1/2 ${modalIn ? 'top-1/2' : '-top-1/2'} -translate-y-1/2 -translate-x-1/2 bg-slate-100 rounded overflow-hidden transition-all w-[90%] md:w-1/2`}>
+            <div className={`${isLoading && 'filter contrast-50'} absolute left-1/2 ${modalIn ? 'top-1/2' : '-top-1/2'} -translate-y-1/2 -translate-x-1/2 bg-slate-100 rounded overflow-hidden transition-all w-[90%] md:w-1/2`}>
                 <div className='relative w-full h-full'>
                     <div className='absolute right-4 top-4 cursor-pointer text-2xl transition-all text-white hover:scale-125' onClick={() => {
                         closeModal()
@@ -24,11 +28,12 @@ const Modal = ({ users, user, searchFriendModal, addFriendHandler, isRegisterFor
                     <div className='my-4'>
                         {searchFriendModal ? <SearchForm users={users} user={user} searchFriendList={searchFriendList} setSearchFriendList={setSearchFriendList} addFriendHandler={addFriendHandler} />
                             :
-                            <Auth isRegisterForm={isRegisterForm} switchModal={switchModal} closeModal={closeModal} />
+                            <Auth isRegisterForm={isRegisterForm} switchModal={switchModal} closeModal={closeModal} sendRequest={sendRequest} />
                         }
                     </div>
                 </div>
             </div>
+            {isLoading && <LoadingSpinner />}
         </>
     )
 }
