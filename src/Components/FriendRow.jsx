@@ -6,8 +6,8 @@ const FriendRow = ({ _id, image, firstName, lastName, online, chengeActiveFriend
     }
 
     return (
-        <li className="flex text-start items-center cursor-pointer transition-all rounded my-2 hover:bg-slate-200/25" onClick={clickHandler}>
-            <div className="p-2">
+        <li className="flex text-start items-center cursor-pointer transition-all rounded my-2 md:hover:bg-slate-200/25" onClick={clickHandler}>
+            <div className="py-2 pr-4 pl-0 md:p-2">
                 <img src={`https://chat-app-andrev.s3.eu-central-1.amazonaws.com/${image}`} alt='avatar' className="w-[50px] h-[50px] max-w-none max-h-none rounded-full object-cover" />
             </div>
             <div className="p-2 hidden md:block">

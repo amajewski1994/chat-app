@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useState, useRef } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { AuthContext } from '../context/auth-context';
@@ -6,9 +6,38 @@ import FriendRow from './FriendRow'
 
 const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler, openModal }) => {
 
+    const [translateX, setTranslateX] = useState(0)
+    const [startTranslateX, setStartTranslateX] = useState(0)
+    const [touchStartValue, setTouchStartValue] = useState(0)
+
     const auth = useContext(AuthContext);
 
+    const friendsRef = useRef(null);
+
     const list = friends.map((element, index) => <FriendRow key={index} {...element} online={auth.onlineUsers.includes(element._id)} chengeActiveFriend={chengeActiveFriend} />)
+
+    const touchStartHandler = (e) => {
+        const value = e.touches[0].clientX
+        setTouchStartValue(value)
+        setStartTranslateX(translateX)
+    }
+
+    const touchMoveHandler = (e) => {
+        const value = e.touches[0].clientX
+        const difference = Math.floor(value - touchStartValue)
+        const newTranslateX = startTranslateX + difference
+
+        const min = -25 - ((friends.length - 5) * 66)
+        console.log(min)
+        const max = 0
+        if (newTranslateX > max || newTranslateX < min || friends.length < 5) return
+        setTranslateX(newTranslateX)
+
+    }
+
+    const touchEndHandler = (e) => {
+        setTouchStartValue(0)
+    }
 
     return (
         <div className="p-2 w-full text-center md:w-1/3 lg:w-1/4">
@@ -21,9 +50,16 @@ const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler, openMo
                     <FontAwesomeIcon className='pointer-events-none' icon={faUserPlus} />
                 </div>
             </div>
-            <div>
+            <div className="overflow-hidden">
                 {/* TO DO SLIDER */}
-                <ul className="flex overflow-hidden md:block">
+                <ul
+                    className={`flex transition-all md:block`}
+                    style={{ transform: `translateX(${translateX}px)` }}
+                    ref={friendsRef}
+                    onTouchStart={(e) => touchStartHandler(e)}
+                    onTouchMove={(e) => touchMoveHandler(e)}
+                    onTouchEnd={(e) => touchEndHandler(e)}
+                >
                     {list}
                 </ul>
             </div>

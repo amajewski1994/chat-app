@@ -89,7 +89,6 @@ function App() {
 
   const scrollChat = () => {
     chatRef.current.scrollTop = chatRef.current.scrollHeight
-    console.log('chat scroll')
   }
 
   const closeModal = () => {
