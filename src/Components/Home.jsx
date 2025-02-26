@@ -76,7 +76,7 @@ const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, fi
     return (
         <div className="m-8 border rounded bg-slate-200/25 flex justify-between p-2 flex-col md:flex-row">
             <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} openModal={openModal} />
-            <Conversation messages={filteredMessages} friend={activeFriend} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} userId={userId} />
+            <Conversation messages={filteredMessages} friend={activeFriend} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} userId={userId} isLoading={isLoading} />
         </div>
     )
 }

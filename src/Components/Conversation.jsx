@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { AuthContext } from '../context/auth-context';
 import Message from './Message'
+import LoadingSpinner from "../shared/LoadingSpinner";
 
-const Conversation = ({ messages, friend, inputValue, inputHandler, sendButtonHandler, chatRef, userId }) => {
+const Conversation = ({ messages, friend, inputValue, inputHandler, sendButtonHandler, chatRef, userId, isLoading }) => {
 
     const auth = useContext(AuthContext);
 
@@ -23,9 +24,11 @@ const Conversation = ({ messages, friend, inputValue, inputHandler, sendButtonHa
                     {friend && messagesList}
                 </div>
             </div>
-            <div className="flex items-center">
-                <input id='message' className="w-1/2 rounded flex-1 px-2 py-1 focus-within:outline-none" value={inputValue} onChange={inputHandler} />
-                <FontAwesomeIcon icon={inputValue ? faPaperPlane : faThumbsUp} className='px-2 mx-2 text-2xl cursor-pointer text-sky-200' onClick={sendButtonHandler} />
+            <div className="flex items-center justify-between">
+                <input id='message' className="rounded px-2 py-1 flex-1 focus-within:outline-none" value={inputValue} onChange={inputHandler} />
+                <div className="w-12">
+                    {isLoading ? <LoadingSpinner absolute={false} className='mx-2' /> : <FontAwesomeIcon icon={inputValue ? faPaperPlane : faThumbsUp} className='px-2 mx-2 text-2xl cursor-pointer text-sky-200' onClick={sendButtonHandler} />}
+                </div>
             </div>
         </div>
     )
