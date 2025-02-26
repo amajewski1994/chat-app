@@ -53,7 +53,7 @@ const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler, openMo
             <div className="overflow-hidden">
                 {/* TO DO SLIDER */}
                 <ul
-                    className={`flex transition-all md:block`}
+                    className={`flex md:block`}
                     style={{ transform: `translateX(${translateX}px)` }}
                     ref={friendsRef}
                     onTouchStart={(e) => touchStartHandler(e)}
