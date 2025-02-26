@@ -100,28 +100,10 @@ function App() {
     setModalForm(prevModalForm => !prevModalForm)
   }
 
-  const addFriendHandler = async (friendID, setSearchFriendList) => {
-    if (!user) return
-    const obj = {
-      friendID
-    }
-    try {
-      let request = `${import.meta.env.VITE_BACKEND_URL}/api/users/${user._id}`;
-      const responseData = await sendRequest(request, 'PATCH',
-        JSON.stringify(obj),
-        {
-          'Content-Type': 'application/json',
-          // Authorization: 'Bearer ' + auth.token
-        }
-      );
-      const userClone = await { ...user }
-      await userClone.friends.push(responseData.newFriend)
-      await setUser(userClone)
-      await closeModal()
-      await setSearchFriendList(false)
-    } catch (err) {
-      console.log(err);
-    }
+  const updateUser = async (newFriend) => {
+    const userClone = await { ...user }
+    await userClone.friends.push(newFriend)
+    await setUser(userClone)
   }
 
   return (
@@ -141,7 +123,7 @@ function App() {
         <div className=" absolute top-0 left-0 box-border h-dvh w-dvw">
           <Navbar openModal={openModal} />
           <Home user={user} openModal={openModal} userId={userId} allUserMessages={allUserMessages} setAllUserMessages={setAllUserMessages} filteredMessages={filteredMessages} filterMessages={filterMessages} activeFriend={activeFriend} setActiveFriend={setActiveFriend} chatRef={chatRef} scrollChat={scrollChat} />
-          <Modal users={users} user={user} searchFriendModal={searchFriendModal} addFriendHandler={addFriendHandler} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
+          <Modal users={users} user={user} searchFriendModal={searchFriendModal} updateUser={updateUser} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
         </div>
       </AuthContext.Provider>
     </>

@@ -7,11 +7,33 @@ import Auth from './Auth'
 import { useHttpClient } from '../hooks/http-hook';
 import LoadingSpinner from '../shared/LoadingSpinner';
 
-const Modal = ({ users, user, searchFriendModal, addFriendHandler, isRegisterForm, modalIn, closeModal, switchModal }) => {
+const Modal = ({ users, user, searchFriendModal, updateUser, isRegisterForm, modalIn, closeModal, switchModal }) => {
 
     const [searchFriendList, setSearchFriendList] = useState(false)
 
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+    const addFriendHandler = async (friendID) => {
+        if (!user) return
+        const obj = {
+            friendID
+        }
+        try {
+            let request = `${import.meta.env.VITE_BACKEND_URL}/api/users/${user._id}`;
+            const responseData = await sendRequest(request, 'PATCH',
+                JSON.stringify(obj),
+                {
+                    'Content-Type': 'application/json',
+                    // Authorization: 'Bearer ' + auth.token
+                }
+            );
+            await updateUser(responseData.newFriend)
+            await closeModal()
+            await setSearchFriendList(false)
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <>
