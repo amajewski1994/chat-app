@@ -28,7 +28,6 @@ const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler, openMo
         const newTranslateX = startTranslateX + difference
 
         const min = -25 - ((friends.length - 5) * 66)
-        console.log(min)
         const max = 0
         if (newTranslateX > max || newTranslateX < min || friends.length < 5) return
         setTranslateX(newTranslateX)
@@ -50,10 +49,9 @@ const Friends = ({ friends, chengeActiveFriend, inputValue, inputHandler, openMo
                     <FontAwesomeIcon className='pointer-events-none' icon={faUserPlus} />
                 </div>
             </div>
-            <div className="overflow-hidden">
-                {/* TO DO SLIDER */}
+            <div className="overflow-hidden md:h-[71vh]">
                 <ul
-                    className={`flex md:block`}
+                    className={`px-[8px] flex box-content md:overflow-y-scroll w-full h-full md:block`}
                     style={{ transform: `translateX(${translateX}px)` }}
                     ref={friendsRef}
                     onTouchStart={(e) => touchStartHandler(e)}
