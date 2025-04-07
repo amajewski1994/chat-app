@@ -24,7 +24,7 @@ Check out the live version here:
 You can try out the app using the following test account:
 
 - **Email:** `test1@test.com`  
-- **Password:** `Test123`
+- **Password:** `test123`
 
 ## 🚧 Project Status
 
