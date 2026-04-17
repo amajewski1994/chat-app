@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react"
 
 import Home from "./Components/Home"
@@ -11,6 +12,7 @@ import { useAuth } from './hooks/auth-hook';
 import { useHttpClient } from './hooks/http-hook';
 
 function App() {
+  const MODAL_ANIMATION_TIME = 300
 
   const [modalIn, setModalIn] = useState(false)
   const [modalForm, setModalForm] = useState(false)
@@ -24,8 +26,7 @@ function App() {
   const chatRef = useRef(null);
 
   const { token, login, logout, userId, avatar, onlineUsers, newMessage } = useAuth();
-
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { sendRequest } = useHttpClient();
 
   useEffect(() => {
     const getUsers = async () => {
@@ -75,12 +76,15 @@ function App() {
     } else {
       setSearchFriendModal(false)
     }
+
     setModalIn(true)
   }
 
   const filterMessages = async (id) => {
     const userMessages = [...allUserMessages]
-    const newFilteredMessages = userMessages.filter(message => message.recipient === id || message.author === id)
+    const newFilteredMessages = userMessages.filter(
+      message => message.recipient === id || message.author === id
+    )
     setFilteredMessages(newFilteredMessages)
     setTimeout(() => {
       scrollChat()
@@ -93,7 +97,11 @@ function App() {
 
   const closeModal = () => {
     setModalIn(false)
-    setModalForm(false)
+
+    setTimeout(() => {
+      setModalForm(false)
+      setSearchFriendModal(false)
+    }, MODAL_ANIMATION_TIME)
   }
 
   const switchModal = () => {
@@ -120,10 +128,31 @@ function App() {
         }}
       >
         <Layout />
-        <div className=" absolute top-0 left-0 box-border h-dvh w-dvw">
+        <div className="absolute top-0 left-0 box-border h-dvh w-dvw">
           <Navbar openModal={openModal} />
-          <Home user={user} openModal={openModal} userId={userId} allUserMessages={allUserMessages} setAllUserMessages={setAllUserMessages} filteredMessages={filteredMessages} filterMessages={filterMessages} activeFriend={activeFriend} setActiveFriend={setActiveFriend} chatRef={chatRef} scrollChat={scrollChat} />
-          <Modal users={users} user={user} searchFriendModal={searchFriendModal} updateUser={updateUser} isRegisterForm={modalForm} modalIn={modalIn} closeModal={closeModal} switchModal={switchModal} />
+          <Home
+            user={user}
+            openModal={openModal}
+            userId={userId}
+            allUserMessages={allUserMessages}
+            setAllUserMessages={setAllUserMessages}
+            filteredMessages={filteredMessages}
+            filterMessages={filterMessages}
+            activeFriend={activeFriend}
+            setActiveFriend={setActiveFriend}
+            chatRef={chatRef}
+            scrollChat={scrollChat}
+          />
+          <Modal
+            users={users}
+            user={user}
+            searchFriendModal={searchFriendModal}
+            updateUser={updateUser}
+            isRegisterForm={modalForm}
+            modalIn={modalIn}
+            closeModal={closeModal}
+            switchModal={switchModal}
+          />
         </div>
       </AuthContext.Provider>
     </>

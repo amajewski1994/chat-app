@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useRef, useState, useContext } from 'react'
-import { AuthContext } from '../context/auth-context';
+import { AuthContext } from '../context/auth-context'
 
 const Auth = ({ isRegisterForm, switchModal, closeModal, sendRequest }) => {
-
     const [formValidity, setFormValidity] = useState(true)
     const [imageSrc, setImageSrc] = useState(false)
     const form = useRef(null)
-    const auth = useContext(AuthContext);
+    const auth = useContext(AuthContext)
 
     const imageHandler = (e) => {
         if (!e.target.files || !e.target.files[0]) return setImageSrc(false)
@@ -15,7 +14,7 @@ const Auth = ({ isRegisterForm, switchModal, closeModal, sendRequest }) => {
     }
 
     const submitForm = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         const formData = new FormData(e.currentTarget)
         const payload = Object.fromEntries(formData)
 
@@ -25,78 +24,152 @@ const Auth = ({ isRegisterForm, switchModal, closeModal, sendRequest }) => {
                 setTimeout(() => {
                     setFormValidity(true)
                 }, 2000)
-                return;
+                return
             }
         }
 
         try {
-
-            let obj = {
+            const obj = {
                 email: payload.email,
                 password: payload.password,
             }
 
-            await e.currentTarget.reset()
-            await setImageSrc(false)
+            e.currentTarget.reset()
+            setImageSrc(false)
 
-            let request = `${import.meta.env.VITE_BACKEND_URL}/api/users/${isRegisterForm ? 'signup' : 'login'}`;
-            // await loginHandler(request, formData, obj)
-            const responseData = await sendRequest(request, 'POST',
+            const request = `${import.meta.env.VITE_BACKEND_URL}/api/users/${isRegisterForm ? 'signup' : 'login'}`
+
+            const responseData = await sendRequest(
+                request,
+                'POST',
                 isRegisterForm ? formData : JSON.stringify(obj),
-                isRegisterForm ? {} : { 'Content-Type': 'application/json', }
-            );
-            await auth.login(responseData.userId, responseData.token, responseData.image)
-            await closeModal()
+                isRegisterForm ? {} : { 'Content-Type': 'application/json' }
+            )
+
+            auth.login(responseData.userId, responseData.token, responseData.image)
+            closeModal()
         } catch (err) {
-            console.log(err);
+            console.log(err)
         }
     }
 
+    const switchAuthModeHandler = () => {
+        form.current?.reset()
+        setImageSrc(false)
+        switchModal()
+    }
+
+    const inputWrapperClass = 'w-full'
+    const labelClass = 'mb-1 block text-sm font-medium text-slate-700'
+    const inputClass =
+        'w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
+
     return (
-        <>
-            <form ref={form} className='flex flex-wrap justify-around' onSubmit={submitForm}>
-                {isRegisterForm && <div className='text-center w-full m-2 md:w-1/3'>
-                    <label className='block'>First Name</label>
-                    <input type='text' name='firstName' className='rounded w-full px-2 py-1 focus-within:outline-none' />
-                </div>}
-                {isRegisterForm && <div className='text-center w-full m-2 md:w-1/3 '>
-                    <label className='block'>Last Name</label>
-                    <input type='text' name='lastName' className='rounded w-full px-2 py-1 focus-within:outline-none' />
-                </div>}
-                <div className='text-center w-full m-2 md:w-1/3'>
-                    <label className='block'>Email</label>
-                    <input type='email' name='email' className='rounded w-full px-2 py-1 focus-within:outline-none' />
-                </div>
-                <div className='text-center w-full m-2 md:w-1/3'>
-                    <label className='block'>Password</label>
-                    <input type='password' name='password' minLength={5} className='rounded w-full px-2 py-1 focus-within:outline-none' />
-                </div>
-                {isRegisterForm && <div className='text-center w-full m-4 '>
-                    <label className='block'>Image</label>
-                    <div className='bg-white m-auto relative rounded w-40 h-40 md:w-60 md:h-60'>
-                        {imageSrc ? <img className='pointer-events-none w-full h-full' src={imageSrc} alt='image' /> :
-                            <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>PICK AN IMAGE</span>}
-                        <input name='image' type='file' onChange={imageHandler} className='absolute top-0 left-0 w-full h-full opacity-0' />
+        <form
+            ref={form}
+            onSubmit={submitForm}
+            className="mx-auto flex max-h-[calc(100dvh-180px)] w-full max-w-2xl flex-col gap-4 overflow-y-auto rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-xl no-scrollbar sm:p-5 md:max-h-none md:gap-6 md:p-8"
+        >
+            <div className={`grid gap-3 ${isRegisterForm ? 'md:grid-cols-2' : 'md:grid-cols-1'} md:gap-4`}>
+                {isRegisterForm && (
+                    <div className={inputWrapperClass}>
+                        <label className={labelClass}>First Name</label>
+                        <input
+                            type="text"
+                            name="firstName"
+                            placeholder="Enter your first name"
+                            className={inputClass}
+                        />
                     </div>
-                </div>}
-                <div className='text-center w-full m-4 relative'>
-                    <p className={`text-red-500 absolute left-1/2 -top-3 -translate-x-1/2 -translate-y-1/2 font-semibold ${formValidity ? 'hidden' : 'block'}`}>Fill out the form</p>
-                    <button className='bg-blue-500 text-white p-2 font-semibold rounded w-1/3'>SUBMIT</button>
+                )}
+
+                {isRegisterForm && (
+                    <div className={inputWrapperClass}>
+                        <label className={labelClass}>Last Name</label>
+                        <input
+                            type="text"
+                            name="lastName"
+                            placeholder="Enter your last name"
+                            className={inputClass}
+                        />
+                    </div>
+                )}
+
+                <div className={inputWrapperClass}>
+                    <label className={labelClass}>Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        className={inputClass}
+                    />
                 </div>
-                <div>
-                    Switch to <span
-                        className='text-cyan-500 cursor-pointer font-bold'
-                        onClick={() => {
-                            form.current.reset()
-                            setImageSrc(false)
-                            switchModal()
-                        }}
+
+                <div className={inputWrapperClass}>
+                    <label className={labelClass}>Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        minLength={5}
+                        placeholder="Enter your password"
+                        className={inputClass}
+                    />
+                </div>
+            </div>
+
+            {isRegisterForm && (
+                <div className="w-full">
+                    <label className={`${labelClass} text-center`}>Profile Image</label>
+                    <div className="mx-auto">
+                        <div className="relative mx-auto flex h-32 w-32 cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 transition hover:border-blue-400 hover:bg-slate-100 sm:h-40 sm:w-40 md:h-56 md:w-56">
+                            {imageSrc ? (
+                                <img
+                                    className="h-full w-full object-cover"
+                                    src={imageSrc}
+                                    alt="Preview"
+                                />
+                            ) : (
+                                <span className="px-4 text-center text-sm font-medium text-slate-500">
+                                    Click to upload image
+                                </span>
+                            )}
+
+                            <input
+                                name="image"
+                                type="file"
+                                accept="image/*"
+                                onChange={imageHandler}
+                                className="absolute inset-0 cursor-pointer opacity-0"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {!formValidity && (
+                <p className="w-full rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-600">
+                    Please fill out all fields correctly.
+                </p>
+            )}
+
+            <div className="flex flex-col items-center gap-3 md:gap-4">
+                <button
+                    className="w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-blue-700 active:scale-[0.99] md:w-auto md:min-w-[180px]"
+                >
+                    {isRegisterForm ? 'Create account' : 'Log in'}
+                </button>
+
+                <p className="text-center text-sm text-slate-600">
+                    {isRegisterForm ? 'Already have an account?' : "Don't have an account?"}{' '}
+                    <span
+                        className="cursor-pointer font-semibold text-blue-600 transition hover:text-blue-700 hover:underline"
+                        onClick={switchAuthModeHandler}
                     >
-                        {isRegisterForm ? 'login' : 'register'}
+                        {isRegisterForm ? 'Log in' : 'Register'}
                     </span>
-                </div>
-            </form>
-        </>
+                </p>
+            </div>
+        </form>
     )
 }
 

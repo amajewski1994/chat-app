@@ -1,22 +1,37 @@
+/* eslint-disable react/prop-types */
 import Friends from "./Friends"
 import Conversation from "./Conversation"
-import { useEffect, useRef, useState } from "react"
-import { useHttpClient } from '../hooks/http-hook';
+import { useEffect, useState } from "react"
+import { useHttpClient } from '../hooks/http-hook'
 
-const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, filteredMessages, filterMessages, activeFriend, setActiveFriend, chatRef, scrollChat }) => {
+const Home = ({
+    user,
+    openModal,
+    userId,
+    allUserMessages,
+    setAllUserMessages,
+    filteredMessages,
+    filterMessages,
+    activeFriend,
+    setActiveFriend,
+    chatRef,
+    scrollChat
+}) => {
     const [friendList, setFriendList] = useState([])
     const [filteredFriendList, setFilteredFriendList] = useState([])
 
     const [messageInputValue, setMessageInputValue] = useState('')
     const [searchInputValue, setSearchInputValue] = useState('')
+    const [friendsOpen, setFriendsOpen] = useState(false)
 
-    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+    const { isLoading, sendRequest } = useHttpClient()
 
     const chengeActiveFriend = async (id) => {
         const newActiveFriend = friendList.find(friend => friend._id === id)
-        await setActiveFriend(newActiveFriend)
+        setActiveFriend(newActiveFriend)
         await filterMessages(id)
-        await scrollChat()
+        scrollChat()
+        setFriendsOpen(false)
     }
 
     useEffect(() => {
@@ -29,38 +44,47 @@ const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, fi
             setAllUserMessages([])
             setActiveFriend(null)
         }
-    }, [user])
-
-    useEffect(() => {
-        scrollChat()
-    }, [friendList])
+    }, [user, setAllUserMessages, setActiveFriend])
 
     const sendButtonHandler = async () => {
         if (!user || !activeFriend) return
+
         const message = messageInputValue ? messageInputValue : 'thumb-up'
         const newMessage = {
             value: message,
             userId,
             recipient: activeFriend._id,
         }
-        const request = `${import.meta.env.VITE_BACKEND_URL}/api/messages/`;
+
+        const request = `${import.meta.env.VITE_BACKEND_URL}/api/messages/`
+
         try {
-            const responseData = await sendRequest(request, 'POST',
+            const responseData = await sendRequest(
+                request,
+                'POST',
                 JSON.stringify(newMessage),
                 {
                     'Content-Type': 'application/json',
                 }
-            );
+            )
+
             setMessageInputValue('')
-            await setAllUserMessages([...allUserMessages, responseData.createdMessage])
+            setAllUserMessages([...allUserMessages, responseData.createdMessage])
         } catch (err) {
             console.log(err)
         }
     }
 
     const filterFriendList = (value) => {
+        const normalizedValue = value.toLowerCase()
         const newList = [...friendList]
-        const filteredNewList = newList.filter(element => element.firstName.toLowerCase().includes(value) || element.lastName.toLowerCase().includes(value))
+
+        const filteredNewList = newList.filter(
+            (element) =>
+                element.firstName.toLowerCase().includes(normalizedValue) ||
+                element.lastName.toLowerCase().includes(normalizedValue)
+        )
+
         setFilteredFriendList(filteredNewList)
     }
 
@@ -74,9 +98,29 @@ const Home = ({ user, openModal, userId, allUserMessages, setAllUserMessages, fi
     }
 
     return (
-        <div className="m-8 border rounded bg-slate-200/25 flex justify-between p-2 flex-col md:flex-row">
-            <Friends friends={filteredFriendList} chengeActiveFriend={chengeActiveFriend} inputValue={searchInputValue} inputHandler={inputHandler} openModal={openModal} />
-            <Conversation messages={filteredMessages} friend={activeFriend} inputValue={messageInputValue} inputHandler={inputHandler} sendButtonHandler={sendButtonHandler} chatRef={chatRef} userId={userId} isLoading={isLoading} />
+        <div className="mx-auto my-4 flex h-[calc(100dvh-110px)] w-[94%] max-w-7xl flex-col gap-4 md:my-6 md:flex-row md:p-4">
+            <Friends
+                friends={filteredFriendList}
+                chengeActiveFriend={chengeActiveFriend}
+                inputValue={searchInputValue}
+                inputHandler={inputHandler}
+                openModal={openModal}
+                activeFriend={activeFriend}
+                friendsOpen={friendsOpen}
+                setFriendsOpen={setFriendsOpen}
+            />
+
+            <Conversation
+                messages={filteredMessages}
+                friend={activeFriend}
+                inputValue={messageInputValue}
+                inputHandler={inputHandler}
+                sendButtonHandler={sendButtonHandler}
+                chatRef={chatRef}
+                userId={userId}
+                isLoading={isLoading}
+                setFriendsOpen={setFriendsOpen}
+            />
         </div>
     )
 }

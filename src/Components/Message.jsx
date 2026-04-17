@@ -1,39 +1,35 @@
-import { useContext } from "react"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
-import { AuthContext } from '../context/auth-context';
+/* eslint-disable react/prop-types */
 
-// eslint-disable-next-line react/prop-types
-const Message = ({ value, createdAt, user, friend, prevMessage }) => {
-
-    const date = new Date(createdAt)
-    const prevDate = new Date(prevMessage && prevMessage.createdAt)
-    const hours = date.getHours()
-    const minutes = date.getMinutes()
-
-    const fullDate = date.getDate() !== prevDate.getDate() ? date.toLocaleDateString() : false
-
-    const auth = useContext(AuthContext);
-    // const seconds = date.getSeconds()
-    const time = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`
+const Message = ({ value, author, prevMessage, friend, user }) => {
+    const isSameAuthor = prevMessage && prevMessage.author === author
 
     return (
-        <>
-            {fullDate && <div className="text-center text-xs opacity-50">{fullDate}</div>}
-            <div className={`chat ${user ? 'chat-end pr-4 md:pr-0' : 'chat-start'}`}>
-                <div className="chat-header my-1">
-                    <time className="text-xs opacity-50 m-1">{time}</time>
-                </div>
-                <div className="chat-image avatar">
-                    <div className="w-10 rounded-full">
-                        <img alt="Tailwind CSS chat bubble component" src={`https://chat-app-andrev.s3.eu-central-1.amazonaws.com/${user ? auth.avatar : friend.image}`} />
-                    </div>
-                </div>
-                <div className={`chat-bubble ${user && 'chat-bubble-primary'}`}>
-                    {value === 'thumb-up' ? <FontAwesomeIcon icon={faThumbsUp} className='text-2xl text-sky-200' /> : value}
+        <div
+            className={`flex w-full ${user ? 'justify-end' : 'justify-start'
+                } ${isSameAuthor ? 'mt-1' : 'mt-4'}`}
+        >
+            <div
+                className={`flex max-w-[75%] items-end gap-2 ${user ? 'flex-row-reverse' : 'flex-row'
+                    }`}
+            >
+                {!user && !isSameAuthor && (
+                    <img
+                        src={`https://chat-app-andrev.s3.eu-central-1.amazonaws.com/${friend?.image}`}
+                        alt="avatar"
+                        className="h-8 w-8 rounded-full object-cover"
+                    />
+                )}
+
+                <div
+                    className={`px-4 py-2.5 text-sm md:text-base ${user
+                        ? 'rounded-2xl rounded-br-md bg-blue-600 text-white'
+                        : 'rounded-2xl rounded-bl-md bg-slate-200 text-slate-800'
+                        }`}
+                >
+                    {value === 'thumb-up' ? '👍' : value}
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 
